@@ -3,7 +3,7 @@ dotenv.config();
 
 import app from "./app.js";
 import { v2 as cloudinary } from "cloudinary";
-import serverless from "serverless-http";
+
 
 // Cloudinary only
 cloudinary.config({
@@ -11,7 +11,8 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+const PORT = process.env.PORT || 5000;
 
-// ❌ REMOVE sequelize.sync completely
-
-export default serverless(app);
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
