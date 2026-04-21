@@ -2,6 +2,8 @@ import { Op } from "sequelize";
 import Job from "../models/jobSchema.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../middlewares/error.js";
+import User from "../models/userSchema.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 export const postJob = catchAsyncErrors(async (req, res, next) => {
   const {
@@ -77,6 +79,31 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     jobNiche: jobNiche.trim(),
     postedBy,
   });
+  const users = await User.findAll();
+
+const matchedUsers = users.filter(user =>
+  [user.niches?.firstNiche, user.niches?.secondNiche, user.niches?.thirdNiche]
+    .includes(job.jobNiche)
+);
+
+for (const user of matchedUsers) {
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `New Job Alert: ${job.title}`,
+      message: `Hi ${user.name},
+
+New job posted:
+- ${job.title}
+- ${job.companyName}
+- ${job.location}
+
+Apply now!`
+    });
+  } catch (err) {
+    console.log("Email failed:", err.message);
+  }
+}
 
   res.status(201).json({
     success: true,
