@@ -21,4 +21,4 @@ A full-stack job portal built using React and Node.js.
 
 ## 🔹 Author
 
-* Your Name
+* Ali Raza
