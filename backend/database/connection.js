@@ -4,7 +4,7 @@ import pg from "pg";
 
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   dialectModule: pg,
   logging: false,
@@ -16,14 +16,12 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   },
 });
 
-const connectDB = async () => {
+// ONLY for manual testing (not auto-run)
+export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log("✅ Connected to Neon PostgreSQL Database");
+    console.log("✅ DB Connected");
   } catch (error) {
-    console.error("❌ DB connection error:", error.message);
+    console.error("❌ DB Error:", error.message);
   }
 };
-
-export { sequelize, connectDB };
-export default sequelize;
