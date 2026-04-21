@@ -78,8 +78,7 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     jobNiche: jobNiche.trim(),
     postedBy,
   });
-  
-await triggerJobNotification(job);
+  setImmediate(() => triggerJobNotification(job));
 
   res.status(201).json({
     success: true,
